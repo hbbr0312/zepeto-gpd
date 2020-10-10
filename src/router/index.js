@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import Home from "@/views/Home.vue";
 import Profile from "@/views/Profile.vue";
 import Submit from "@/views/Submit.vue";
-
+import ContestCreate from "@/views/ContestCreate.vue"
 
 Vue.use(VueRouter);
 
@@ -24,6 +24,12 @@ const routes = [
         path: "/submit/:id",
         name: "Submit",
         component: Submit,
+        meta: { transitionName: 'slide-left' },
+    },
+    {
+        path: "/create",
+        name: "ContestCreate",
+        component: ContestCreate,
         meta: { transitionName: 'slide-left' },
     }
 ];

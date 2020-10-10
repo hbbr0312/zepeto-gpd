@@ -1,10 +1,15 @@
 <template>
   <div id="submit">
     <div class="header d-flex flex-row">
-      <router-link to="/" class="align-self-start">
-        <v-icon>mdi-chevron-left</v-icon>
-      </router-link>
-      <div class="text-center view-title">Submit</div>
+      <router-link to="/"
+        ><div class="pupple_text">
+          <v-icon color="#6332F8">mdi-chevron-left</v-icon>
+          Back
+        </div></router-link
+      >
+      <div class="view-title">
+        <div>{{ title }}</div>
+      </div>
     </div>
     <!-- {{ $route.params.id }} -->
     <div class="submit-main">
@@ -16,10 +21,7 @@
         참여는 한번만 가능합니다. <br />
         모든 준비가 완료되셨다면 <br />하단의 참여하기 버튼을 눌러주세요!
       </div>
-      <div
-        v-if="loading"
-        class="d-flex flex-row justify-center align-center flex-grow-0"
-      >
+      <div class="text-center loader_container row_direction" v-if="loading">
         <v-progress-circular
           indeterminate
           color="grey"
@@ -31,20 +33,36 @@
         v-else
       >
         <div class="submit-avatar d-flex flex-column justify-center">
-          <img alt="Avatar" :src="avatar" v-if="avatar" class="center" />
-          <v-btn depressed class="submit-change" @click="submitAvatar = true"
+          <v-img :src="avatar" class="center" width="155"> </v-img>
+          <v-btn
+            outlined
+            depressed
+            class="submit-change"
+            @click="submitAvatar = true"
             >Change Avatar</v-btn
           >
         </div>
         <div class="submit-avatar d-flex flex-column justify-center">
-          <img alt="Avatar" :src="pose" v-if="pose" class="center" />
-          <v-btn depressed class="submit-change" @click="submitPose = true"
+          <v-img alt="Avatar" :src="pose" class="center" width="155" />
+          <v-btn
+            outlined
+            depressed
+            class="submit-change"
+            @click="submitPose = true"
             >Change Pose</v-btn
           >
         </div>
       </div>
-      <v-btn block depressed class="submit-button" @click="submitConfirm = true"
-        >SUBMIT</v-btn
+      <v-btn
+        v-if="!loading"
+        block
+        depressed
+        large
+        class="submit-button"
+        @click="submitConfirm = true"
+        dark
+        color="#6332F8"
+        >Participate</v-btn
       >
     </div>
     <v-dialog
@@ -80,17 +98,25 @@
         </div>
       </div>
     </v-dialog>
-    <v-dialog v-model="submitAvatar" transition="dialog-bottom-transition">
+    <v-dialog
+      fullscreen
+      v-model="submitAvatar"
+      transition="dialog-bottom-transition"
+    >
       <div class="avatar-dialog d-flex flex-column align-center">
         Change Avatar
-
-        <v-row>
-          <v-col v-for="p in poses" :key="p" class="d-flex child-flex" cols="4">
+        <v-row class="d-flex justify-center">
+          <v-col
+            v-for="(a, i) in avatars"
+            :key="a"
+            class="d-flex child-flex"
+            cols="5"
+          >
             <v-img
-              :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
-              :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
-              aspect-ratio="1"
-              class="grey lighten-2"
+              :src="a"
+              :lazy-src="a"
+              @click="selectAvatar(i)"
+              :class="{ 'submit-selected': selectedAvatar == i }"
             >
               <template v-slot:placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
@@ -103,27 +129,52 @@
             </v-img>
           </v-col>
         </v-row>
-        <!-- <div class="d-flex flex-row" v-for="(p, i) in poses" :key="i">
-          <div
-            class="submit-select-center-cropped-box"
-            v-for="(img, j) in p"
-            :key="`${i}-${j}`"
+      </div>
+    </v-dialog>
+    <v-dialog
+      fullscreen
+      v-model="submitPose"
+      transition="dialog-bottom-transition"
+    >
+      <div class="avatar-dialog d-flex flex-column align-center">
+        Change Pose
+        <v-row class="d-flex justify-center">
+          <v-col
+            v-for="(p, i) in poses"
+            :key="p"
+            class="d-flex child-flex"
+            cols="5"
           >
-            <img
-              alt="Avatar"
-              :src="img"
-              class="center ma-5 submit-select-center-cropped"
-            />
-          </div>
-        </div> -->
-        <div class="submit-confirm-buttons d-flex flex-row">
-          <v-btn
-            depressed
-            class="ma-5 submit-button"
-            @click="submitAvatar = false"
-            >Cancel</v-btn
-          >
-        </div>
+            <div
+              class="d-flex flex-column align-center justify-center"
+              style="height: 200px"
+              v-if="poseLoading"
+            >
+              <v-progress-circular
+                indeterminate
+                color="grey"
+                :size="70"
+              ></v-progress-circular>
+            </div>
+
+            <v-img
+              :src="p"
+              :lazy-src="p"
+              @click="selectPose(i)"
+              :class="{ 'submit-selected': selectedPose == i }"
+              v-else
+            >
+              <template v-slot:placeholder>
+                <v-row class="fill-height ma-0" align="center" justify="center">
+                  <v-progress-circular
+                    indeterminate
+                    color="grey lighten-5"
+                  ></v-progress-circular>
+                </v-row>
+              </template>
+            </v-img>
+          </v-col>
+        </v-row>
       </div>
     </v-dialog>
   </div>
@@ -131,12 +182,40 @@
 
 <script>
 import { get_image } from "@/assets/api";
-
-const example = [
-  "PHOTOBOOTH_ONE_425",
-  "PHOTOBOOTH_ONE_463",
+const avatars = [
+  "MYKURU",
+  "I863RV",
+  "PEJS9P",
+  "HIB6YC",
+  "59391K",
+  "07FS6S",
+  "AVYFOM",
+  "LA0FSI",
+  "1ZGF5O",
+  "6Z17BF",
+  "O8ALN9",
+];
+const closeup = [
+  "PHOTOBOOTH_ONE_543",
+  "PHOTOBOOTH_ONE_482",
+  "PHOTOBOOTH_ONE_512",
+  "PHOTOBOOTH_ONE_426",
+];
+const fullshot = [
   "PHOTOBOOTH_ONE_545",
   "PHOTOBOOTH_ONE_478",
+  "PHOTOBOOTH_ONE_463",
+  "PHOTOBOOTH_ONE_462",
+  "PHOTOBOOTH_ONE_428",
+  "PHOTOBOOTH_ONE_450",
+  "PHOTOBOOTH_ONE_455",
+  "PHOTOBOOTH_ONE_457",
+  "PHOTOBOOTH_ONE_441",
+  "PHOTOBOOTH_ONE_425",
+  "PHOTOBOOTH_ONE_423",
+  "PHOTOBOOTH_ONE_419",
+  "PHOTOBOOTH_ONE_417",
+  "PHOTOBOOTH_ONE_383",
 ];
 export default {
   name: "Submit",
@@ -147,29 +226,57 @@ export default {
       theme: "데일리룩",
       avatar: null,
       pose: null,
+      avatars: null,
+      /*eslint-disable */
+      poses: Array.from({ length: 14 }, (e) => null),
+      selectedPose: 0,
+      selectedAvatar: 0,
+      shotmode: 0,
       submitAvatar: false,
       submitPose: false,
       submitConfirm: false,
       submitLoading: false,
-      poses: null,
+      poseLoading: false,
     };
   },
-  async mounted() {
+  mounted() {
     this.loading = true;
-    const avatar = await get_image(150, "PHOTOBOOTH_ONE_463", "07FS6S");
-    this.avatar = avatar;
-    const pose = await get_image(150, "PHOTOBOOTH_ONE_425", "07FS6S");
-    this.pose = pose;
-    const poses = [];
-    let img;
-    for (var i in example) {
-      img = await get_image(300, example[i], "07FS6S");
-      poses.push(img);
-    }
-    this.poses = poses;
-    this.loading = false;
+    this.loadAvatars();
+    this.loadPoses();
   },
+  updated() {},
   methods: {
+    async loadAvatars() {
+      let img;
+      const avas = [];
+      for (var i in avatars) {
+        img = await get_image(300, "PHOTOBOOTH_ONE_545", avatars[i]);
+        if (i == 0) this.avatar = img;
+        avas.push(img);
+      }
+      this.avatars = avas;
+    },
+    async loadPoses() {
+      this.poseLoading = true;
+      let shots;
+      if (this.shotmode == 0) {
+        shots = fullshot;
+      } else {
+        shots = closeup;
+      }
+      const poses = [];
+      let img;
+      for (var i in shots) {
+        img = await get_image(300, shots[i], avatars[this.selectedAvatar]);
+        if (i == 0) {
+          this.pose = img;
+          this.loading = false;
+        }
+        poses.push(img);
+      }
+      this.poses = poses;
+      this.poseLoading = false;
+    },
     async submit() {
       this.submitConfirm = false;
       this.submitLoading = true;
@@ -178,13 +285,18 @@ export default {
         this.$router.push("/");
       }, 1000);
     },
-    async changeAvatar() {
-      const avatar = await get_image(200, "PHOTOBOOTH_ONE_463", "07FS6S");
-      this.avatar = avatar;
+    selectAvatar(i) {
+      this.selectedAvatar = i;
+      this.loadPoses();
+      const ava = this.avatars[i];
+      this.avatar = ava;
+      this.submitAvatar = false;
     },
-    async changePose() {
-      const pose = await get_image(200, "PHOTOBOOTH_ONE_425", "07FS6S");
+    selectPose(i) {
+      this.selectedPose = i;
+      const pose = this.poses[i];
       this.pose = pose;
+      this.submitPose = false;
     },
   },
 };
@@ -206,6 +318,7 @@ export default {
 }
 .submit-avata-box {
   margin-top: 20px;
+  height: 50vh;
   margin-bottom: 20px;
 }
 .confirm-dialog {
@@ -216,13 +329,13 @@ export default {
   margin: 10px;
 }
 .avatar-dialog {
+  overflow: hidden;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
   padding-top: 20px;
   background-color: white;
-  height: 100vh;
 }
 .submit-fullscreen {
   height: 100vh;
@@ -243,5 +356,28 @@ export default {
   margin: auto;
   min-height: 100%;
   min-width: 100%;
+}
+.submit-selected {
+  border: 1px solid #6332f8;
+  border-radius: 20px;
+}
+.loader_container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.row_direction {
+  margin-left: -20px;
+  width: 100vw;
+  height: 50vh;
+}
+.submit-pose-fill {
+  background-color: red;
+  height: 100%;
+  width: 100vw;
+}
+.pupple_text {
+  color: #6332f8;
 }
 </style>
