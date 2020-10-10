@@ -6,9 +6,14 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     compName: null,
+    comps: null
   },
-  getters: {},
-  mutations: {},
+  getters: {
+    getComps: state => state.comps
+  },
+  mutations: {
+    setComps: (state, newData) => state.comps = newData
+  },
   actions: {},
   modules: {},
 });

@@ -9,15 +9,15 @@
           <v-avatar size="34px">
             <img
               alt="Avatar"
-              src="https://render-cdn.zepeto.io/20201010/07/39mqJ0scZN6RlXJxa1"
+              src="https://render-cdn.zepeto.io/20201010/17/39mqDcsd2pDxFLdIIN"
             />
           </v-avatar>
         </router-link>
       </div>
       <div class="home_rl_pd d-flex flex-row justify-space-between">
         <v-btn
-          :dark="filters[0]"
-          :outlined="!filters[0]"
+          :dark="filter == 0"
+          :outlined="filter != 0"
           depressed
           color="#6332F8"
           @click="filterclick(0)"
@@ -27,8 +27,8 @@
           >강패대</v-btn
         >
         <v-btn
-          :dark="filters[1]"
-          :outlined="!filters[1]"
+          :dark="filter == 1"
+          :outlined="filter != 1"
           depressed
           color="#6332F8"
           @click="filterclick(1)"
@@ -38,8 +38,8 @@
           >강얼대</v-btn
         >
         <v-btn
-          :dark="filters[2]"
-          :outlined="!filters[2]"
+          :dark="filter == 2"
+          :outlined="filter != 2"
           depressed
           color="#6332F8"
           @click="filterclick(2)"
@@ -75,13 +75,7 @@
       :style="{ height: `${windowHeight - 146}px` }"
       v-else
     >
-      <ContestCard
-        contestTitle="여친룩 꾸미기 대회"
-        theme="데일리룩"
-        v-for="i in 10"
-        :key="i"
-        :id="i"
-      />
+      <ContestCard :contestinfo="c" v-for="(c, i) in comps" :key="i" :id="i" />
     </div>
 
     <v-fab-transition>
@@ -103,6 +97,7 @@
 </template>
 
 <script>
+import { get_com_list } from "@/assets/api";
 import ContestCard from "@/components/ContestCard";
 export default {
   name: "Home",
@@ -111,20 +106,38 @@ export default {
       loading: false,
       keyword: "",
       searchOn: false,
-      filters: [false, false, false],
+      filter: -1,
+      comps: null,
       windowHeight: window.innerHeight,
+      origin_comps: null,
     };
   },
   components: { ContestCard },
+  async mounted() {
+    this.loading = true;
+    if (this.$store.getters.getComps) {
+      this.comps = this.$store.getters.getComps;
+      this.loading = false;
+      this.origin_comps = this.$store.getters.getComps;
+      console.log("already");
+      return;
+    }
+    const data = await get_com_list();
+    this.comps = data;
+    this.origin_comps = JSON.parse(JSON.stringify(data));
+    this.$store.commit("setComps", data);
+    this.loading = false;
+  },
   methods: {
     filterclick(i) {
-      const filter = this.filters;
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 500);
-      filter[i] = !this.filters[i];
-      this.filters = JSON.parse(JSON.stringify(filter));
+      this.filter = i;
+      if (i == 0) {
+        this.comps = this.origin_comps.filter((e) => e.theme[0] != "강얼대");
+      } else if (i == 1) {
+        this.comps = this.origin_comps.filter((e) => e.theme[0] == "강얼대");
+      } else {
+        this.comps = this.origin_comps.filter((e) => e.participated);
+      }
     },
     searchclick() {
       this.searchOn = !this.searchOn;

@@ -1,22 +1,24 @@
 <template>
   <div id="submit">
-    <div class="header d-flex flex-row">
-      <router-link to="/"
-        ><div class="pupple_text">
-          <v-icon color="#6332F8">mdi-chevron-left</v-icon>
-          Back
-        </div></router-link
-      >
-      <div class="view-title">
-        <div>{{ title }}</div>
+    <div class="d-flex flex-row">
+      <div class="competition-header">
+        <div class="button-back" @click="$router.back()">
+          <v-icon class="icon-back" color="#6332F8" large
+            >mdi-chevron-left</v-icon
+          >Back
+        </div>
+
+        <div class="header-title">
+          <b>{{ contestinfo.name }}</b>
+        </div>
       </div>
     </div>
     <!-- {{ $route.params.id }} -->
     <div class="submit-main">
       <div class="heading2">Guideline</div>
       <div class="submit-guide-content">
-        이 콘테스트는 <b>{{ title }} </b>입니다. <br />
-        <b>{{ theme }}</b
+        이 콘테스트는 <b>{{ contestinfo.name }} </b>입니다. <br />
+        <b>{{ contestinfo.theme[0] }}</b
         >에 맞는 의상을 미리 착용해 주세요! <br />
         참여는 한번만 가능합니다. <br />
         모든 준비가 완료되셨다면 <br />하단의 참여하기 버튼을 눌러주세요!
@@ -33,22 +35,24 @@
         v-else
       >
         <div class="submit-avatar d-flex flex-column justify-center">
-          <v-img :src="avatar" class="center" width="155"> </v-img>
+          <img :src="avatar" class="center center-cropped" />
           <v-btn
             outlined
             depressed
             class="submit-change"
             @click="submitAvatar = true"
+            style="margin-top: 20px"
             >Change Avatar</v-btn
           >
         </div>
         <div class="submit-avatar d-flex flex-column justify-center">
-          <v-img alt="Avatar" :src="pose" class="center" width="155" />
+          <img alt="Avatar" :src="pose" class="center center-cropped" />
           <v-btn
             outlined
             depressed
             class="submit-change"
             @click="submitPose = true"
+            style="margin-top: 20px"
             >Change Pose</v-btn
           >
         </div>
@@ -104,8 +108,19 @@
       transition="dialog-bottom-transition"
     >
       <div class="avatar-dialog d-flex flex-column align-center">
-        Change Avatar
-        <v-row class="d-flex justify-center">
+        <v-row>Change Avatar <v-btn icon>mdi-plus</v-btn></v-row>
+
+        <div
+          class="submit-loading-full d-flex flex-column align-center justify-center"
+          v-if="poseLoading"
+        >
+          <v-progress-circular
+            indeterminate
+            color="grey"
+            :size="70"
+          ></v-progress-circular>
+        </div>
+        <v-row class="d-flex justify-center" v-else>
           <v-col
             v-for="(a, i) in avatars"
             :key="a"
@@ -138,31 +153,28 @@
     >
       <div class="avatar-dialog d-flex flex-column align-center">
         Change Pose
-        <v-row class="d-flex justify-center">
+        <div
+          class="submit-loading-full d-flex flex-column align-center justify-center"
+          v-if="poseLoading"
+        >
+          <v-progress-circular
+            indeterminate
+            color="grey"
+            :size="70"
+          ></v-progress-circular>
+        </div>
+        <v-row class="d-flex justify-center" v-else>
           <v-col
             v-for="(p, i) in poses"
             :key="p"
             class="d-flex child-flex"
             cols="5"
           >
-            <div
-              class="d-flex flex-column align-center justify-center"
-              style="height: 200px"
-              v-if="poseLoading"
-            >
-              <v-progress-circular
-                indeterminate
-                color="grey"
-                :size="70"
-              ></v-progress-circular>
-            </div>
-
             <v-img
               :src="p"
               :lazy-src="p"
               @click="selectPose(i)"
               :class="{ 'submit-selected': selectedPose == i }"
-              v-else
             >
               <template v-slot:placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
@@ -183,6 +195,7 @@
 <script>
 import { get_image } from "@/assets/api";
 const avatars = [
+  "O8ALN9",
   "MYKURU",
   "I863RV",
   "PEJS9P",
@@ -222,8 +235,7 @@ export default {
   data() {
     return {
       loading: false,
-      title: "여친룩 꾸미기 대회",
-      theme: "데일리룩",
+      contestinfo: null,
       avatar: null,
       pose: null,
       avatars: null,
@@ -241,6 +253,11 @@ export default {
   },
   mounted() {
     this.loading = true;
+    const contestinfo = this.$store.getters.getComps[this.$route.params.id];
+    this.contestinfo = contestinfo;
+    if (contestinfo.theme[0] == "강얼대") {
+      this.shotmode = 1;
+    }
     this.loadAvatars();
     this.loadPoses();
   },
@@ -306,7 +323,6 @@ export default {
 }
 .header {
   margin-top: 20px;
-  border-bottom: 1px solid #c4c4c4;
   padding-bottom: 10px;
 }
 .submit-guide-content {
@@ -314,11 +330,10 @@ export default {
 .submit-main {
   padding: 20px;
 }
-.submit-avatar {
-}
+
 .submit-avata-box {
   margin-top: 20px;
-  height: 50vh;
+  height: 40vh;
   margin-bottom: 20px;
 }
 .confirm-dialog {
@@ -379,5 +394,14 @@ export default {
 }
 .pupple_text {
   color: #6332f8;
+}
+.submit-loading-full {
+  height: 100vh;
+}
+.center-cropped {
+  object-fit: cover; /* Scale the image so it covers whole area, thus will likely crop */
+  object-position: center; /* Center the image within the element */
+  height: 220px;
+  width: 160px;
 }
 </style>
