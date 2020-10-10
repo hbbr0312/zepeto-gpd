@@ -1,0 +1,26 @@
+[
+  {
+    "name": "나, 상큼해.",
+    "num_participants": 16,
+    "num_votes": 533,
+    "theme": "상큼발랄",
+    "prize": 1,
+    "rank": 1,
+    "winner_code": "O8ALN9",
+    "winner_image": "https://render-cdn.zepeto.io/20201010/18/39mqDbsd2xP2Zgl5br",
+    "my_image": "https://render-cdn.zepeto.io/20201010/18/39mqDbsd2xP2Zgl5br",
+    "background_color": "linear-gradient(45deg, rgba(255,203,253,1) 0%, rgba(254,195,192,1) 100%);"
+  },
+  {
+    "name": "혼자 있고 싶어요",
+    "num_participants": 16,
+    "num_votes": 227,
+    "theme": "패러디",
+    "prize": 3,
+    "rank": 38,
+    "winner_code": "RJ5AWX",
+    "winner_image": "https://render-cdn.zepeto.io/20201010/18/39mqExsd2xrfsQElEP",
+    "my_image": "https://render-cdn.zepeto.io/20201010/18/39mqKJsd2ykTkK5RxR",
+    "background_color": "rgb(231,218,204)"
+  }
+]

@@ -6,12 +6,12 @@
         >Back
       </div>
 
-      <div class="header-title"><b>Profile</b></div>
+      <div class="header-title"><b>프로필</b></div>
     </div>
     <div class="profile-box">
       <img class="profile-avatar" :src="profileSrc" />
       <div class="profile-info">
-        <div class="profile-name">Name</div>
+        <div class="profile-name">숭아:D</div>
         <div class="profile-achievement-header">Achievement Title</div>
         <div class="profile-achievements-holder">
           <div class="profile-achievement">
@@ -72,19 +72,148 @@
       </v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
-      <v-tab-item class="profile-tab" key="participated"> </v-tab-item>
-      <v-tab-item class="profile-tab" key="voted"></v-tab-item>
+      <v-tab-item class="profile-tab" key="participated">
+        <div class="profile-tab-filters">
+          <div class="profile-tab-filter highlighted">최근순</div>
+          <div class="profile-tab-filter">인기순</div>
+          <div class="profile-tab-filter">랭킹순</div>
+        </div>
+        <div
+          class="profile-log-holder"
+          v-for="log in pLogs"
+          :key="`p-log-${log.winner_code}`"
+          :style="'background: ' + log.background_color"
+          @click="onClickLog(log, 'participate')"
+        >
+          <div class="profile-log-title">
+            {{ log.name }}
+          </div>
+          <div class="profile-log-desc mt-auto">
+            {{ log.num_participants }} 참가자
+          </div>
+          <div class="profile-log-desc">{{ log.num_votes }} 투표</div>
+
+          <img :src="log.my_image" class="profile-log-image" />
+
+          <div class="profile-log-theme">
+            <div class="profile-log-desc">{{ log.theme }}</div>
+          </div>
+          <div
+            class="profile-log-medal"
+            v-bind:class="{
+              'log-medal-bronze': log.prize === 3,
+              'log-medal-gold': log.prize === 1,
+            }"
+          ></div>
+        </div>
+      </v-tab-item>
+      <v-tab-item class="profile-tab" key="voted">
+        <div class="profile-tab-filters">
+          <div class="profile-tab-filter highlighted">최근순</div>
+          <div class="profile-tab-filter">인기순</div>
+          <div class="profile-tab-filter">랭킹순</div>
+        </div>
+        <div
+          class="profile-log-holder"
+          v-for="log in vLogs"
+          :key="`v-log-${log.winner_code}`"
+          :style="'background: ' + log.background_color"
+          @click="onClickLog(log, 'vote')"
+        >
+          <div class="profile-log-title">
+            {{ log.name }}
+          </div>
+          <div class="profile-log-desc mt-auto">
+            {{ log.num_participants }} 참가자
+          </div>
+          <div class="profile-log-desc">{{ log.num_votes }} 투표</div>
+
+          <img :src="log.my_image" class="profile-log-image" />
+
+          <div class="profile-log-theme">
+            <div class="profile-log-desc">{{ log.theme }}</div>
+          </div>
+          <div
+            class="profile-log-medal"
+            v-bind:class="{
+              'log-medal-pick': log.prize === 1,
+            }"
+          ></div>
+        </div>
+      </v-tab-item>
     </v-tabs-items>
+    <v-dialog v-model="showDialog" width="300">
+      <v-card class="log-dialog">
+        <div class="log-dialog-title">
+          {{ name }}
+        </div>
+
+        <img class="log-dialog-winner" :src="image" />
+        <v-btn color="#6332F8" outlined> Follow </v-btn>
+        <div class="log-dialog-rank">{{ rankString }}</div>
+        <div class="log-dialog-ment">{{ ment }}</div>
+        <v-btn text color="#5f5f5f" @click="showDialog = false"> 닫기 </v-btn>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import pLogs from "@/assets/pLogs.json";
+import vLogs from "@/assets/vLogs.json";
+
 export default {
   name: "Profile",
+  computed: {
+    participatedLog() {
+      return [1, 2, 3];
+    },
+    votedLog() {
+      return [1, 2, 3];
+    },
+    rankString() {
+      if (this.type === "vote") {
+        return "내가 뽑은 아바타의 순위 : " + this.rank + "위";
+      } else {
+        return "나의 순위 : " + this.rank + "위";
+      }
+    },
+    ment() {
+      if (this.type === "vote") {
+        if (this.rank === 1) {
+          return "바로 돗자리 까셔야 겠는걸요?";
+        } else {
+          return "투표했던 아바타가 아쉽게도 우승하지 못했습니다ㅠㅠ";
+        }
+      } else {
+        if (this.rank === 1) {
+          return "축하합니다! 우승하셨습니다!";
+        } else {
+          return "이번엔 아쉽게 우승을 놓쳤지만, 기회는 언제든 있습니다!";
+        }
+      }
+    },
+  },
   data: () => ({
     tab: "participated",
-    profileSrc: "https://render-cdn.zepeto.io/20201010/07/39mqKHscZUNLOrbCCm",
+    pLogs: pLogs,
+    vLogs: vLogs,
+    profileSrc: "https://render-cdn.zepeto.io/20201010/17/39mqDbsd2o28qD3zN7",
+    showDialog: false,
+    name: null,
+    image: null,
+    rank: null,
+    type: null,
   }),
+  methods: {
+    onClickLog(log, type) {
+      this.type = type;
+      this.name = log.name;
+      this.image = log.winner_image;
+      this.rank = log.rank;
+      this.showDialog = true;
+    },
+  },
 };
 </script>
 <style>
@@ -93,6 +222,7 @@ export default {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
 .profile-box {
@@ -106,7 +236,7 @@ export default {
 .profile-avatar {
   width: 120px;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: flex;
 }
 
@@ -207,12 +337,39 @@ export default {
 }
 
 .profile-tab {
+  position: relative;
   width: 100%;
-  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 10px 10px 0 10px;
-  overflow: auto;
+  padding: 60px 20px 0 20px;
+  overflow: auto !important;
+}
+
+.profile-tab-filters {
+  position: absolute;
+
+  width: 100%;
+  height: 60px;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+}
+
+.profile-tab-filter {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #5f5f5f;
+  font-size: 15px;
+  font-weight: normal;
+}
+
+.highlighted {
+  color: #6332f8;
 }
 
 .v-tabs {
@@ -227,5 +384,119 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
+}
+
+.profile-log-holder {
+  width: 100%;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  color: white;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.profile-log-holder:after {
+  content: "\A";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  opacity: 1;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+}
+
+.profile-log-title {
+  font-size: 17px;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.profile-log-image {
+  position: absolute;
+  width: 140px;
+  height: 100%;
+  object-fit: cover;
+  bottom: -20px;
+  right: 40px;
+  z-index: 2;
+}
+
+.profile-log-desc {
+  font-size: 12px;
+  z-index: 2;
+}
+
+.profile-log-medal {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+
+  z-index: 2;
+}
+
+.profile-log-theme {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  z-index: 2;
+}
+
+.log-medal-bronze {
+  background: url("~@/assets/bronze.png") no-repeat;
+  background-size: contain;
+  background-position: center center;
+}
+
+.log-medal-gold {
+  background: url("~@/assets/gold.png") no-repeat;
+  background-size: contain;
+  background-position: center center;
+}
+
+.log-medal-pick {
+  background: url("~@/assets/king.png") no-repeat;
+  background-size: contain;
+  background-position: center center;
+}
+
+.log-dialog {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.log-dialog-winner {
+  width: 300px;
+  margin-bottom: 20px;
+}
+
+.log-dialog-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.log-dialog-rank {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #5f5f5f;
+}
+
+.log-dialog-ment {
+  margin-top: 8px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: black;
 }
 </style>
