@@ -1,0 +1,26 @@
+[
+  {
+    "name": "뭉크뭉크",
+    "num_participants": 16,
+    "num_votes": 302,
+    "theme": "패러디",
+    "prize": 1,
+    "rank": 1,
+    "winner_code": "M1LRWB",
+    "winner_image": "https://render-cdn.zepeto.io/20201010/18/39mqEwsd2HCnWr0rvC",
+    "my_image": "https://render-cdn.zepeto.io/20201010/18/39mqEwsd2HCnWr0rvC",
+    "background_color": "rgb(74, 116, 133)"
+  },
+  {
+    "name": "하세기!",
+    "num_participants": 16,
+    "num_votes": 854,
+    "theme": "패러디",
+    "prize": -1,
+    "rank": 45,
+    "winner_code": "7LSDYP",
+    "winner_image": "https://render-cdn.zepeto.io/20201010/19/39mqDbsd2IAXABDrnY",
+    "my_image": "https://render-cdn.zepeto.io/20201010/19/39mqKIsd2IsahRQYj0",
+    "background_color": "rgb(231,218,204)"
+  }
+]
