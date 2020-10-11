@@ -147,7 +147,7 @@
         <div class="log-dialog-title">
           {{ name }}
         </div>
-
+        <div class="log-dialog-subtitle">WINNER</div>
         <img class="log-dialog-winner" :src="image" />
         <v-btn color="#6332F8" outlined> Follow </v-btn>
         <div class="log-dialog-rank">{{ rankString }}</div>
@@ -487,6 +487,13 @@ export default {
   font-weight: bold;
 }
 
+.log-dialog-subtitle {
+  margin-top: 10px;
+  font-size: 24px;
+  color: #6332f8;
+  font-weight: bold;
+}
+
 .log-dialog-rank {
   margin-top: 15px;
   font-size: 12px;
@@ -494,6 +501,8 @@ export default {
 }
 
 .log-dialog-ment {
+  width: 200px;
+  text-align: center;
   margin-top: 8px;
   margin-bottom: 10px;
   font-size: 15px;

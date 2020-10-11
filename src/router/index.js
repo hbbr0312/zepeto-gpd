@@ -4,7 +4,7 @@ import Home from "@/views/Home.vue";
 import Profile from "@/views/Profile.vue";
 import Submit from "@/views/Submit.vue";
 import Competition from "@/views/Competition.vue";
-import ContestCreate from "@/views/ContestCreate.vue"
+import ContestCreate from "@/views/ContestCreate.vue";
 
 Vue.use(VueRouter);
 
@@ -28,16 +28,16 @@ const routes = [
     meta: { transitionName: "slide-left" },
   },
   {
-    path: "/competition/:code",
+    path: "/competition",
     name: "Competition",
     component: Competition,
   },
   {
-      path: "/create",
-      name: "ContestCreate",
-      component: ContestCreate,
-      meta: { transitionName: 'slide-left' },
-  }
+    path: "/create",
+    name: "ContestCreate",
+    component: ContestCreate,
+    meta: { transitionName: "slide-left" },
+  },
 ];
 
 const router = new VueRouter({

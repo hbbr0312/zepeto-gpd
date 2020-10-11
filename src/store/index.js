@@ -5,14 +5,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    compName: null,
-    comps: null
+    compName: "남친룩",
+    compCode: 480,
+    comps: null,
   },
   getters: {
-    getComps: state => state.comps
+    getComps: (state) => state.comps,
   },
   mutations: {
-    setComps: (state, newData) => state.comps = newData
+    setComps: (state, newData) => (state.comps = newData),
   },
   actions: {},
   modules: {},
