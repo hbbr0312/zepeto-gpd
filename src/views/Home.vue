@@ -4,7 +4,7 @@
       <div
         class="home_rl_pd d-flex flex-row justify-space-between align-center"
       >
-        <div class="heading1">Name</div>
+        <div class="heading1">숭아:D</div>
         <router-link to="/profile">
           <v-avatar size="34px">
             <img
@@ -59,7 +59,7 @@
     </div>
     <div
       class="home_main"
-      :style="{ height: `${windowHeight - 146}px` }"
+      :style="{ height: `${windowHeight - 146}px;` }"
       v-if="loading"
     >
       <div class="home_height_fill d-flex flex-row justify-center align-center">
@@ -75,7 +75,14 @@
       :style="{ height: `${windowHeight - 146}px` }"
       v-else
     >
-      <ContestCard :contestinfo="c" v-for="(c, i) in comps" :key="i" :id="i" />
+      <div class="contests-wrapper">
+        <ContestCard
+          :contestinfo="c"
+          v-for="(c, i) in comps"
+          :key="i"
+          :id="i"
+        />
+      </div>
     </div>
 
     <v-fab-transition>
@@ -178,13 +185,20 @@ export default {
   padding-bottom: 10px;
 }
 .home_main {
+  padding: 20px 20px 0;
+  display: flex;
   overflow: auto;
+  flex-direction: column;
 }
+
+.contests-wrapper {
+  width: 100%;
+}
+
 .home-fab {
   margin-bottom: 80px;
 }
-.home-filter {
-}
+
 .home_height_fill {
   height: 60vh;
 }
