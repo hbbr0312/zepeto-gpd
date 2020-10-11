@@ -78,33 +78,35 @@
           <div class="profile-tab-filter">인기순</div>
           <div class="profile-tab-filter">랭킹순</div>
         </div>
-        <div
-          class="profile-log-holder"
-          v-for="log in pLogs"
-          :key="`p-log-${log.winner_code}`"
-          :style="'background: ' + log.background_color"
-          @click="onClickLog(log, 'participate')"
-        >
-          <div class="profile-log-title">
-            {{ log.name }}
-          </div>
-          <div class="profile-log-desc mt-auto">
-            {{ log.num_participants }} 참가자
-          </div>
-          <div class="profile-log-desc">{{ log.num_votes }} 투표</div>
-
-          <img :src="log.my_image" class="profile-log-image" />
-
-          <div class="profile-log-theme">
-            <div class="profile-log-desc">{{ log.theme }}</div>
-          </div>
+        <div class="profile-logs">
           <div
-            class="profile-log-medal"
-            v-bind:class="{
-              'log-medal-bronze': log.prize === 3,
-              'log-medal-gold': log.prize === 1,
-            }"
-          ></div>
+            class="profile-log-holder"
+            v-for="log in pLogs"
+            :key="`p-log-${log.winner_code}`"
+            :style="'background: ' + log.background_color"
+            @click="onClickLog(log, 'participate')"
+          >
+            <div class="profile-log-title">
+              {{ log.name }}
+            </div>
+            <div class="profile-log-desc mt-auto">
+              {{ log.num_participants }} 참가자
+            </div>
+            <div class="profile-log-desc">{{ log.num_votes }} 투표</div>
+
+            <img :src="log.my_image" class="profile-log-image" />
+
+            <div class="profile-log-theme">
+              <div class="profile-log-desc">{{ log.theme }}</div>
+            </div>
+            <div
+              class="profile-log-medal"
+              v-bind:class="{
+                'log-medal-bronze': log.prize === 3,
+                'log-medal-gold': log.prize === 1,
+              }"
+            ></div>
+          </div>
         </div>
       </v-tab-item>
       <v-tab-item class="profile-tab" key="voted">
@@ -113,32 +115,34 @@
           <div class="profile-tab-filter">인기순</div>
           <div class="profile-tab-filter">랭킹순</div>
         </div>
-        <div
-          class="profile-log-holder"
-          v-for="log in vLogs"
-          :key="`v-log-${log.winner_code}`"
-          :style="'background: ' + log.background_color"
-          @click="onClickLog(log, 'vote')"
-        >
-          <div class="profile-log-title">
-            {{ log.name }}
-          </div>
-          <div class="profile-log-desc mt-auto">
-            {{ log.num_participants }} 참가자
-          </div>
-          <div class="profile-log-desc">{{ log.num_votes }} 투표</div>
-
-          <img :src="log.my_image" class="profile-log-image" />
-
-          <div class="profile-log-theme">
-            <div class="profile-log-desc">{{ log.theme }}</div>
-          </div>
+        <div class="profile-logs">
           <div
-            class="profile-log-medal"
-            v-bind:class="{
-              'log-medal-pick': log.prize === 1,
-            }"
-          ></div>
+            class="profile-log-holder"
+            v-for="log in vLogs"
+            :key="`v-log-${log.winner_code}`"
+            :style="'background: ' + log.background_color"
+            @click="onClickLog(log, 'vote')"
+          >
+            <div class="profile-log-title">
+              {{ log.name }}
+            </div>
+            <div class="profile-log-desc mt-auto">
+              {{ log.num_participants }} 참가자
+            </div>
+            <div class="profile-log-desc">{{ log.num_votes }} 투표</div>
+
+            <img :src="log.my_image" class="profile-log-image" />
+
+            <div class="profile-log-theme">
+              <div class="profile-log-desc">{{ log.theme }}</div>
+            </div>
+            <div
+              class="profile-log-medal"
+              v-bind:class="{
+                'log-medal-pick': log.prize === 1,
+              }"
+            ></div>
+          </div>
         </div>
       </v-tab-item>
     </v-tabs-items>
@@ -222,7 +226,6 @@ export default {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: auto;
 }
 
 .profile-box {
@@ -343,7 +346,7 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 60px 20px 0 20px;
-  overflow: auto !important;
+  overflow: auto;
 }
 
 .profile-tab-filters {
@@ -384,6 +387,12 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
+}
+
+.profile-logs {
+  width: 100%;
+  min-height: 100%;
+  overflow: auto;
 }
 
 .profile-log-holder {
