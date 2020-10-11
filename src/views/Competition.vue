@@ -83,7 +83,7 @@
         <v-btn color="#6332F8" outlined> Follow </v-btn>
 
         <div class="log-dialog-ment">투표에 참여해주셔서 감사합니다!</div>
-        <v-btn text color="#5f5f5f" @click="$router.back()"> 나가기 </v-btn>
+        <v-btn text color="#5f5f5f" @click="$router.push('/')"> 나가기 </v-btn>
       </v-card>
     </v-dialog>
   </div>
