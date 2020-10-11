@@ -9,7 +9,7 @@
         </div>
 
         <div class="header-title">
-          <b>{{ contestinfo.name }}</b>
+          <b>{{ contestinfo ? contestinfo.name : null }}</b>
         </div>
       </div>
     </div>
@@ -17,8 +17,9 @@
     <div class="submit-main">
       <div class="heading2">Guideline</div>
       <div class="submit-guide-content">
-        이 콘테스트는 <b>{{ contestinfo.name }} </b>입니다. <br />
-        <b>{{ contestinfo.theme[0] }}</b
+        이 콘테스트는 <b>{{ contestinfo ? contestinfo.name : null }} </b>입니다.
+        <br />
+        <b>{{ contestinfo ? contestinfo.theme[0] : null }}</b
         >에 맞는 의상을 미리 착용해 주세요! <br />
         참여는 한번만 가능합니다. <br />
         모든 준비가 완료되셨다면 <br />하단의 참여하기 버튼을 눌러주세요!
@@ -146,13 +147,28 @@
         </v-row>
       </div>
     </v-dialog>
-    <v-dialog
-      fullscreen
-      v-model="submitPose"
-      transition="dialog-bottom-transition"
-    >
-      <div class="avatar-dialog d-flex flex-column align-center">
-        Change Pose
+
+    <v-overlay :value="submitPose" class="d-flex flex-column justify-end">
+      <div class="contest_create_modal d-flex flex-column align-center">
+        <div
+          class="contest_create_modal_title d-flex flex-row justify-space-between align-center"
+          style="color: black; margin-top: 20px"
+        >
+          <div
+            class="d-flex flex-row flex-grow-1 text-center justify-center align-center"
+            style="margin-left: 50px"
+          >
+            Change Pose
+          </div>
+          <v-btn
+            icon
+            color="black"
+            @click="submitPose = false"
+            style="margin-right: 20px"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
         <div
           class="submit-loading-full d-flex flex-column align-center justify-center"
           v-if="poseLoading"
@@ -176,19 +192,10 @@
               @click="selectPose(i)"
               :class="{ 'submit-selected': selectedPose == i }"
             >
-              <template v-slot:placeholder>
-                <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular
-                    indeterminate
-                    color="grey lighten-5"
-                  ></v-progress-circular>
-                </v-row>
-              </template>
             </v-img>
           </v-col>
-        </v-row>
-      </div>
-    </v-dialog>
+        </v-row></div
+    ></v-overlay>
   </div>
 </template>
 
@@ -218,17 +225,7 @@ const fullshot = [
   "PHOTOBOOTH_ONE_545",
   "PHOTOBOOTH_ONE_478",
   "PHOTOBOOTH_ONE_463",
-  "PHOTOBOOTH_ONE_462",
   "PHOTOBOOTH_ONE_428",
-  "PHOTOBOOTH_ONE_450",
-  "PHOTOBOOTH_ONE_455",
-  "PHOTOBOOTH_ONE_457",
-  "PHOTOBOOTH_ONE_441",
-  "PHOTOBOOTH_ONE_425",
-  "PHOTOBOOTH_ONE_423",
-  "PHOTOBOOTH_ONE_419",
-  "PHOTOBOOTH_ONE_417",
-  "PHOTOBOOTH_ONE_383",
 ];
 export default {
   name: "Submit",

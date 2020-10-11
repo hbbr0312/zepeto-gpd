@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/submit/${id}`">
+  <router-link :to="link">
     <v-card
       class="contestcard d-flex flex-column justify-space-between"
       :style="`background: linear-gradient(${color[0]}, ${color[1]}) !important;`"
@@ -55,10 +55,20 @@ export default {
   data() {
     return {
       color: colors[0],
+      link: "/",
     };
   },
   mounted() {
     this.color = colors[this.id];
+    const status = this.contestinfo.status;
+    if (status == "ongoing") {
+      this.link = `/submit/${this.id}`;
+    } else {
+      this.$store.state.compName = this.contestinfo.name;
+      if (this.contestinfo.booth_fixed)
+        this.$store.state.compCode = this.contestinfo.booth.split("_")[2];
+      this.link = "/competition";
+    }
   },
 };
 </script>

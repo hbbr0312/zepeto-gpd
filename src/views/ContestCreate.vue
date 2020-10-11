@@ -64,11 +64,21 @@
       <v-overlay :value="assignModal" class="d-flex flex-column justify-end">
         <div class="contest_create_modal d-flex flex-column align-center">
           <div
-            class="contest_create_modal_title"
+            class="contest_create_modal_title d-flex flex-row justify-space-between align-center"
             style="color: black; margin-top: 20px"
           >
-            Assign Pose
-            <v-btn icon color="black" style="justify-self: flex-end">
+            <div
+              class="d-flex flex-row flex-grow-1 text-center justify-center align-center"
+              style="margin-left: 50px"
+            >
+              Assign Pose
+            </div>
+            <v-btn
+              icon
+              color="black"
+              @click="assignModal = false"
+              style="margin-right: 20px"
+            >
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </div>
@@ -178,5 +188,9 @@ export default {
   border-top-right-radius: 20px;
   height: 65vh;
   width: 100vw;
+}
+.contest_create_modal_title {
+  width: 100%;
+  text-align: center;
 }
 </style>
