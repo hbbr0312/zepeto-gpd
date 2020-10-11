@@ -231,7 +231,7 @@ export default {
       selectedPose: 0,
       selectedAvatar: 0,
       shotmode: 0,
-      submitAvatar: true,
+      submitAvatar: false,
       submitPose: false,
       submitConfirm: false,
       submitLoading: false,
