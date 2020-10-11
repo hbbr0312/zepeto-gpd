@@ -29,7 +29,6 @@ export const get_image = async (width, photoboothTitle, hashcode) => {
     return resultUrl;
 }
 
-
 export const get_com_list = async () => {
     const url = 'http://52.79.151.67:3000/api/comp_list'
     let data;
@@ -51,8 +50,6 @@ export const get_com_list = async () => {
     }
     return data;
 }
-
-
 
 export const make_comp = async (code, title, cover, max, booth, theme) => {
     const url = 'http://52.79.151.67:3000/api/create_comp'

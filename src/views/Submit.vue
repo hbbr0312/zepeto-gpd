@@ -306,13 +306,9 @@ export default {
 };
 </script>
 <style>
-#submit {
-}
 .header {
   margin-top: 20px;
   padding-bottom: 10px;
-}
-.submit-guide-content {
 }
 .submit-main {
   padding: 20px;

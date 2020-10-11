@@ -1,7 +1,7 @@
 <template>
   <div id="profile">
     <div class="competition-header">
-      <div class="button-back" @click="$router.back()">
+      <div class="button-back" @click="$router.push('/')">
         <v-icon class="icon-back" color="#6332F8" large>mdi-chevron-left</v-icon
         >Back
       </div>

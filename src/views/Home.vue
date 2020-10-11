@@ -46,7 +46,7 @@
           width="94"
           v-if="!searchOn"
           rounded
-          >참여</v-btn
+          >투표중</v-btn
         >
         <input
           v-model="keyword"
@@ -126,7 +126,6 @@ export default {
       this.comps = this.$store.getters.getComps;
       this.loading = false;
       this.origin_comps = this.$store.getters.getComps;
-      console.log("already");
       return;
     }
     const data = await get_com_list();
@@ -144,7 +143,7 @@ export default {
         } else if (i == 1) {
           this.comps = this.origin_comps.filter((e) => e.theme[0] == "강얼대");
         } else {
-          this.comps = this.origin_comps.filter((e) => e.participated);
+          this.comps = this.origin_comps.filter((e) => e.status == "voting");
         }
       } else {
         this.filter = -1;

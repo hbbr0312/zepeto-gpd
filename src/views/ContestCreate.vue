@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex flex-row">
       <div class="competition-header">
-        <div class="button-back" @click="$router.back()">
+        <div class="button-back" @click="$router.push('/')">
           <v-icon class="icon-back" color="#6332F8" large
             >mdi-chevron-left</v-icon
           >Back
@@ -111,6 +111,12 @@ const fullshot = [
   "PHOTOBOOTH_ONE_463",
   "PHOTOBOOTH_ONE_428",
 ];
+const closeup = [
+  "PHOTOBOOTH_ONE_543",
+  "PHOTOBOOTH_ONE_482",
+  "PHOTOBOOTH_ONE_512",
+  "PHOTOBOOTH_ONE_426",
+];
 export default {
   name: "ContestCreate",
   data() {
@@ -118,7 +124,7 @@ export default {
       title: null,
       theme: null,
       max: null,
-      assignModal: true,
+      assignModal: false,
       assign: false,
       items: [4, 8, 16, 32, 64, 128],
       tabs: ["Recommended", "Full", "Close Up"],
@@ -126,10 +132,17 @@ export default {
       poses: null,
       selectedPose: null,
       alert: false,
+      shots: fullshot,
     };
   },
   mounted() {
     this.loadPoses();
+  },
+  updated() {
+    if (this.theme == "강얼대") {
+      this.shots = closeup;
+      this.loadPoses();
+    }
   },
   methods: {
     async createContest() {
@@ -158,7 +171,7 @@ export default {
     },
     async loadPoses() {
       this.poseLoading = true;
-      let shots = fullshot;
+      let shots = this.shots;
       const poses = [];
       let img;
       for (var i in shots) {

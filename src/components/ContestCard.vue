@@ -1,33 +1,32 @@
 <template>
-  <router-link :to="link">
-    <div
-      class="profile-log-holder d-flex flex-column justify-space-between"
-      :style="`background: linear-gradient(${color[0]}, ${color[1]}) !important;`"
-    >
-      <div class="ribbon" v-if="contestinfo.participated">Participated</div>
-      <div class="contestcard_title d-flex flex-row justify-left">
-        {{ contestinfo.name }}
-      </div>
-
-      <div class="d-flex flex-row justify-space-between">
-        <div class="contestcard_theme">
-          <v-icon dark>mdi-account</v-icon>
-          {{ contestinfo.num_participants }} /
-          {{ contestinfo.capacity }}
-        </div>
-        <div class="contestcard_theme">
-          {{ contestinfo.theme[0] }}
-        </div>
-      </div>
-      <v-img
-        contain
-        class="profile-log-image"
-        style="top: 0; z-index: 1; right: 10px"
-        :src="contestinfo.cover_image"
-        cover
-      />
+  <div
+    class="profile-log-holder d-flex flex-column justify-space-between"
+    :style="`background: linear-gradient(${color[0]}, ${color[1]}) !important;`"
+    @click="clickCard()"
+  >
+    <div class="ribbon" v-if="contestinfo.participated">Participated</div>
+    <div class="contestcard_title d-flex flex-row justify-left">
+      {{ contestinfo.name }}
     </div>
-  </router-link>
+
+    <div class="d-flex flex-row justify-space-between">
+      <div class="contestcard_theme">
+        <v-icon dark>mdi-account</v-icon>
+        {{ contestinfo.num_participants }} /
+        {{ contestinfo.capacity }}
+      </div>
+      <div class="contestcard_theme">
+        {{ contestinfo.theme[0] }}
+      </div>
+    </div>
+    <v-img
+      contain
+      class="profile-log-image"
+      style="top: 0; z-index: 1; right: 10px"
+      :src="contestinfo.cover_image"
+      cover
+    />
+  </div>
 </template>
 <script>
 const colors = [
@@ -56,15 +55,21 @@ export default {
   },
   mounted() {
     this.color = colors[this.id];
-    const status = this.contestinfo.status;
-    if (status == "ongoing") {
-      this.link = `/submit/${this.id}`;
-    } else {
-      this.$store.state.compName = this.contestinfo.name;
-      if (this.contestinfo.booth_fixed)
-        this.$store.state.compCode = this.contestinfo.booth.split("_")[2];
-      this.link = "/competition";
-    }
+  },
+  methods: {
+    async clickCard() {
+      const status = this.contestinfo.status;
+      if (status == "ongoing") {
+        this.$router.push(`/submit/${this.id}`);
+      } else {
+        this.$store.state.compName = this.contestinfo.name;
+        if (this.contestinfo.booth_fixed) {
+          this.$store.state.compCode = this.contestinfo.booth.split("_")[2];
+          await setTimeout(() => {}, 500);
+        }
+        this.$router.push("/competition");
+      }
+    },
   },
 };
 </script>
