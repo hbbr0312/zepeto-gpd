@@ -5,7 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    compName: null,
+    compName: "남친룩",
+    compCode: 480,
   },
   getters: {},
   mutations: {},

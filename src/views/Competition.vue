@@ -8,67 +8,95 @@
 
       <div class="header-title"><b>ZEPETO</b> World Cup</div>
     </div>
-    <div class="competition-versus">
-      <div class="competition-versus-header">
-        <div class="competition-versus-title">
-          {{ "남친룩" }}
+    <div class="loader" v-if="!competitors">
+      <v-progress-circular indeterminate size="50" color="#6332F8" />
+    </div>
+    <template v-else-if="!showResult">
+      <div class="competition-versus">
+        <div class="competition-versus-header">
+          <div class="competition-versus-title">
+            {{ compName }}
+          </div>
+          <div class="competition-versus-round">
+            {{ roundText }}
+          </div>
         </div>
-        <div class="competition-versus-round">
-          {{ roundText }}
+        <div class="competition-versus-pictures">
+          <v-img
+            class="competition-versus-placeholder"
+            :src="competitors[voted].image"
+            @click="onSelect('l')"
+            v-bind:class="{
+              win_left: selected && !winRight,
+              lose_left: selected && winRight,
+            }"
+          />
+
+          <v-img
+            class="competition-versus-placeholder"
+            :src="competitors[voted + 1].image"
+            @click="onSelect('r')"
+            v-bind:class="{
+              win_right: selected && winRight,
+              lose_right: selected && !winRight,
+            }"
+          />
+
+          <div
+            class="competition-versus-logo"
+            v-bind:class="{ blur: selected }"
+          >
+            VS
+          </div>
         </div>
       </div>
-      <div class="competition-versus-pictures">
-        <img
-          class="competition-versus-placeholder"
-          :src="leftSrc"
-          @click="onSelect('l')"
-          v-bind:class="{
-            win_left: selected && !winRight,
-            lose_left: selected && winRight,
-          }"
-        />
-
-        <img
-          class="competition-versus-placeholder"
-          :src="rightSrc"
-          @click="onSelect('r')"
-          v-bind:class="{
-            win_right: selected && winRight,
-            lose_right: selected && !winRight,
-          }"
-        />
-
-        <div class="competition-versus-logo" v-bind:class="{ blur: selected }">
-          VS
-        </div>
+      <div class="competition-follow">
+        <v-spacer />
+        <v-btn color="#6332F8" outlined v-bind:class="{ blur: selected }">
+          Follow
+        </v-btn>
+        <v-spacer />
+        <v-spacer />
+        <v-btn color="#6332F8" outlined v-bind:class="{ blur: selected }">
+          Follow
+        </v-btn>
+        <v-spacer />
       </div>
-    </div>
-    <div class="competition-follow">
-      <v-spacer />
-      <v-btn color="#6332F8" outlined v-bind:class="{ blur: selected }">
-        Follow
-      </v-btn>
-      <v-spacer />
-      <v-spacer />
-      <v-btn color="#6332F8" outlined v-bind:class="{ blur: selected }">
-        Follow
-      </v-btn>
-      <v-spacer />
-    </div>
-    <v-progress-linear
-      height="40"
-      color="#6332F8"
-      class="competition-progress"
-      :value="progress"
-    />
+      <v-progress-linear
+        height="40"
+        color="#6332F8"
+        class="competition-progress"
+        :value="progress"
+      />
+    </template>
+    <v-dialog v-model="showResult" width="300" persistent>
+      <v-card class="log-dialog">
+        <div class="log-dialog-title">
+          {{ compName }}
+        </div>
+        <div class="log-dialog-subtitle">My Pick</div>
+        <v-img
+          class="log-dialog-winner"
+          v-if="winnerImage"
+          :src="winnerImage"
+        />
+        <v-btn color="#6332F8" outlined> Follow </v-btn>
+
+        <div class="log-dialog-ment">투표에 참여해주셔서 감사합니다!</div>
+        <v-btn text color="#5f5f5f" @click="$router.back()"> 나가기 </v-btn>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import users from "@/assets/users.json";
+import axios from "axios";
+
 export default {
   computed: {
     compName() {
-      return this.$stores.tate.compName;
+      return this.$store.state.compName;
     },
     progress() {
       return Math.floor((this.voted * 100) / this.competitors.length);
@@ -84,31 +112,106 @@ export default {
   },
   data: () => ({
     winRight: false,
-    competitors: [1, 2, 3, 4, 5, 6, 7, 8],
+    competitors: null,
+    nextRounder: [],
     round: 1,
     selected: false,
+    winnerImage: null,
     voted: 0,
-    leftSrc: "https://render-cdn.zepeto.io/20201010/07/39mqKHscZUNLOrbCCm",
-    rightSrc: "https://render-cdn.zepeto.io/20201010/07/39mqwDscZUYSiLsYus",
+    users: users.map((u) => {
+      return {
+        hashcode: u.hashcode,
+      };
+    }),
+    showResult: false,
   }),
   methods: {
     async onSelect(dir) {
+      if (this.selected) return;
+
       if (dir === "r") {
         this.winRight = true;
+        this.nextRounder.push(this.competitors[this.voted + 1]);
       } else {
         this.winRight = false;
+        this.nextRounder.push(this.competitors[this.voted]);
       }
 
       this.selected = true;
-      this.voted += 2;
 
       await setTimeout(() => {
+        this.voted += 2;
         if (this.voted === this.competitors.length) {
-          this.voted = 0;
+          if (this.nextRounder.length === 1) {
+            this.winnerImage = this.nextRounder[0].image;
+            this.showResult = true;
+            return;
+          } else {
+            this.competitors = this.shuffle(this.nextRounder);
+            this.nextRounder = [];
+            this.voted = 0;
+            this.round += 1;
+          }
         }
+
         this.selected = false;
       }, 1500);
     },
+    shuffle(array) {
+      var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    },
+  },
+  async mounted() {
+    const boothCode = `PHOTOBOOTH_ONE_${this.$store.state.compCode}`;
+    const zepetoBaseUrl =
+      "https://render-api.zepeto.io/v2/graphics/zepeto/booth/";
+
+    const shuffledUsers = this.shuffle(this.users);
+    const competitors = [];
+
+    for (const user of shuffledUsers) {
+      const body = {
+        type: "booth",
+        width: 500,
+        target: {
+          hashCodes: [user.hashcode],
+        },
+      };
+      let zepetoResponse;
+      try {
+        zepetoResponse = await axios.post(zepetoBaseUrl + boothCode, body, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      } catch (err) {
+        alert("네트워크 오류");
+        return;
+      }
+
+      competitors.push({
+        hashcode: user.hashcode,
+        image: zepetoResponse.data.url,
+      });
+    }
+
+    this.competitors = competitors;
   },
 };
 </script>
@@ -321,5 +424,13 @@ export default {
   to {
     transform: translateX(250%);
   }
+}
+
+.loader {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
