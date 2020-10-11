@@ -501,6 +501,8 @@ export default {
 }
 
 .log-dialog-ment {
+  width: 200px;
+  text-align: center;
   margin-top: 8px;
   margin-bottom: 10px;
   font-size: 15px;
