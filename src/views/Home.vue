@@ -122,12 +122,12 @@ export default {
   components: { ContestCard },
   async mounted() {
     this.loading = true;
-    if (this.$store.getters.getComps) {
-      this.comps = this.$store.getters.getComps;
-      this.loading = false;
-      this.origin_comps = this.$store.getters.getComps;
-      return;
-    }
+    // if (this.$store.getters.getComps) {
+    //   this.comps = this.$store.getters.getComps;
+    //   this.loading = false;
+    //   this.origin_comps = this.$store.getters.getComps;
+    //   return;
+    // }
     const data = await get_com_list();
     this.comps = data;
     this.origin_comps = JSON.parse(JSON.stringify(data));
@@ -152,10 +152,12 @@ export default {
     },
     searchclick() {
       this.searchOn = !this.searchOn;
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 1000);
+      if (this.keyword) {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+        }, 1000);
+      }
     },
   },
 };

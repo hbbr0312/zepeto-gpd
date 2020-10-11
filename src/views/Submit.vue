@@ -118,10 +118,10 @@
           <v-btn
             icon
             color="black"
-            @click="submitAvatar = false"
+            @click="gotoShop()"
             style="margin-right: 20px"
           >
-            <v-icon>mdi-close</v-icon>
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
         <div
@@ -248,7 +248,6 @@ export default {
     this.loadAvatars();
     this.loadPoses();
   },
-  updated() {},
   methods: {
     async loadAvatars() {
       let img;
@@ -301,6 +300,10 @@ export default {
       const pose = this.poses[i];
       this.pose = pose;
       this.submitPose = false;
+    },
+    gotoShop() {
+      window.location.replace("ZEPETO://HOME/SHOP");
+      this.submitAvatar = false;
     },
   },
 };

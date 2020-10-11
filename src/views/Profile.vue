@@ -153,7 +153,9 @@
         </div>
         <div class="log-dialog-subtitle">WINNER</div>
         <img class="log-dialog-winner" :src="image" />
-        <v-btn color="#6332F8" outlined> Follow </v-btn>
+        <v-btn color="#6332F8" outlined @click="onClickFollow()">
+          Follow
+        </v-btn>
         <div class="log-dialog-rank">{{ rankString }}</div>
         <div class="log-dialog-ment">{{ ment }}</div>
         <v-btn text color="#5f5f5f" @click="showDialog = false"> 닫기 </v-btn>
@@ -208,6 +210,7 @@ export default {
     image: null,
     rank: null,
     type: null,
+    usercode: null,
   }),
   methods: {
     onClickLog(log, type) {
@@ -216,6 +219,11 @@ export default {
       this.image = log.winner_image;
       this.rank = log.rank;
       this.showDialog = true;
+      this.usercode = log.winner_code;
+    },
+    onClickFollow() {
+      const skeme = "ZEPETO://HOME/PROFILE/CARD?" + this.usercode;
+      window.location.replace(skeme);
     },
   },
 };

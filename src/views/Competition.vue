@@ -54,12 +54,22 @@
       </div>
       <div class="competition-follow">
         <v-spacer />
-        <v-btn color="#6332F8" outlined v-bind:class="{ blur: selected }">
+        <v-btn
+          color="#6332F8"
+          outlined
+          v-bind:class="{ blur: selected }"
+          @click="clickFollow(competitors[voted])"
+        >
           Follow
         </v-btn>
         <v-spacer />
         <v-spacer />
-        <v-btn color="#6332F8" outlined v-bind:class="{ blur: selected }">
+        <v-btn
+          color="#6332F8"
+          outlined
+          v-bind:class="{ blur: selected }"
+          @click="clickFollow(competitors[voted + 1])"
+        >
           Follow
         </v-btn>
         <v-spacer />
@@ -129,6 +139,9 @@ export default {
     showResult: false,
   }),
   methods: {
+    clickFollow(user) {
+      window.location.replace("ZEPETO://HOME/PROFILE/CARD?" + user.hashcode);
+    },
     async onSelect(dir) {
       if (this.selected) return;
 
