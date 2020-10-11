@@ -193,6 +193,8 @@ export default {
 
 .contests-wrapper {
   width: 100%;
+  min-height: 100%;
+  overflow: auto;
 }
 
 .home-fab {
