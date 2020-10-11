@@ -7,9 +7,14 @@ export default new Vuex.Store({
   state: {
     compName: "남친룩",
     compCode: 480,
+    comps: null,
   },
-  getters: {},
-  mutations: {},
+  getters: {
+    getComps: (state) => state.comps,
+  },
+  mutations: {
+    setComps: (state, newData) => (state.comps = newData),
+  },
   actions: {},
   modules: {},
 });

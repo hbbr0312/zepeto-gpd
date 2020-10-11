@@ -28,3 +28,26 @@ export const get_image = async (width, photoboothTitle, hashcode) => {
     }
     return resultUrl;
 }
+
+
+export const get_com_list = async () => {
+    const url = 'http://52.79.151.67:3000/api/comp_list'
+    let data;
+    try {
+        const res = await axios({
+            method: 'get',
+            url,
+        });
+        data = res.data.comps;
+        for (var i in data.slice(0, 5)) {
+            data[i].num_participants = Math.round(Math.random() * data[i].capacity)
+            if (i <= 1) data[i].participated = true
+            else data[i].participated = false
+        }
+    } catch (e) {
+        console.log(e);
+        // 요청 실패 시 공백 반환
+        data = '';
+    }
+    return data;
+}
