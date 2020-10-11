@@ -1,7 +1,7 @@
 <template>
   <router-link :to="`/submit/${id}`">
-    <v-card
-      class="contestcard d-flex flex-column justify-space-between"
+    <div
+      class="profile-log-holder d-flex flex-column justify-space-between"
       :style="`background: linear-gradient(${color[0]}, ${color[1]}) !important;`"
     >
       <div class="ribbon" v-if="contestinfo.participated">Participated</div>
@@ -20,17 +20,13 @@
         </div>
       </div>
       <v-img
-        :src="contestinfo.cover_image"
-        style="
-          position: relative;
-          z-index: 0;
-          top: -130px;
-          align-self: flex-end;
-        "
         contain
-        width="200px"
+        class="profile-log-image"
+        style="top: 0; z-index: 1; right: 10px"
+        :src="contestinfo.cover_image"
+        cover
       />
-    </v-card>
+    </div>
   </router-link>
 </template>
 <script>
@@ -74,28 +70,31 @@ export default {
 .contestcard_title {
   font-size: 17px;
   color: white;
+  font-weight: 500;
   position: absolute;
-  z-index: 1;
+  z-index: 3;
 }
 .contestcard_theme {
   margin-top: 85px;
   font-size: 13px;
   color: white;
-  z-index: 1;
+  z-index: 2;
 }
 .ribbon {
   margin: 0;
   padding: 0;
   font-size: 11px;
+  font-weight: 500;
   background: #f44499;
   color: white;
-  padding: 1em 0;
+  padding: 10px 0;
   position: absolute;
   top: 0;
   right: 0;
   transform: translateX(30%) translateY(0%) rotate(40deg);
   transform-origin: top left;
-  z-index: 1;
+  z-index: 3;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.3);
 }
 .ribbon:before,
 .ribbon:after {
@@ -106,12 +105,15 @@ export default {
   width: 100%;
   height: 100%;
   background: #f44499;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.3);
 }
 .ribbon:before {
   right: 100%;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.3);
 }
 .ribbon:after {
   left: 100%;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.3);
 }
 .test {
   display: inline-block;
