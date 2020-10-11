@@ -130,13 +130,18 @@ export default {
   },
   methods: {
     filterclick(i) {
-      this.filter = i;
-      if (i == 0) {
-        this.comps = this.origin_comps.filter((e) => e.theme[0] != "강얼대");
-      } else if (i == 1) {
-        this.comps = this.origin_comps.filter((e) => e.theme[0] == "강얼대");
+      if (this.filter != i) {
+        this.filter = i;
+        if (i == 0) {
+          this.comps = this.origin_comps.filter((e) => e.theme[0] != "강얼대");
+        } else if (i == 1) {
+          this.comps = this.origin_comps.filter((e) => e.theme[0] == "강얼대");
+        } else {
+          this.comps = this.origin_comps.filter((e) => e.participated);
+        }
       } else {
-        this.comps = this.origin_comps.filter((e) => e.participated);
+        this.filter = -1;
+        this.comps = JSON.parse(JSON.stringify(this.origin_comps));
       }
     },
     searchclick() {

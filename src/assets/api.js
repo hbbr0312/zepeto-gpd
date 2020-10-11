@@ -51,3 +51,32 @@ export const get_com_list = async () => {
     }
     return data;
 }
+
+
+
+export const make_comp = async (code, title, cover, max, booth, theme) => {
+    const url = 'http://52.79.151.67:3000/api/create_comp'
+    let data;
+    try {
+        const res = await axios({
+            method: 'post',
+            url,
+            data: {
+                "user_code": code,
+                "name": title,
+                "cover_image": cover,
+                "capacity": max,
+                "theme": [theme],
+                "booth_fixed": booth != null,
+                "booth": booth
+            }
+
+        });
+        data = res.data
+    } catch (e) {
+        console.log(e);
+        // 요청 실패 시 공백 반환
+        data = '';
+    }
+    return data.result == 1;
+}
