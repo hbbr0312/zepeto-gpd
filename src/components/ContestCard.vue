@@ -8,7 +8,9 @@
     <div class="contestcard_title d-flex flex-row justify-left">
       {{ contestinfo.name }}
     </div>
-
+    <div class="contestcard_status">
+      {{ contestinfo.status == "ongoing" ? "모집중" : "투표중" }}
+    </div>
     <div class="d-flex flex-row justify-space-between">
       <div class="contestcard_theme">
         <v-icon dark>mdi-account</v-icon>
@@ -60,7 +62,9 @@ export default {
     async clickCard() {
       const status = this.contestinfo.status;
       if (status == "ongoing") {
-        this.$router.push(`/submit/${this.id}`);
+        this.$store.state.contestinfo = this.contestinfo;
+        await setTimeout(() => {}, 500);
+        this.$router.push("/submit");
       } else {
         this.$store.state.compName = this.contestinfo.name;
         if (this.contestinfo.booth_fixed) {
@@ -89,8 +93,13 @@ export default {
   position: absolute;
   z-index: 3;
 }
+.contestcard_status {
+  font-size: 11px;
+  margin-top: 30px;
+  z-index: 3;
+}
 .contestcard_theme {
-  margin-top: 85px;
+  margin-top: 40px;
   font-size: 13px;
   color: white;
   z-index: 2;

@@ -8,6 +8,7 @@ export default new Vuex.Store({
     compName: null,
     compCode: null,
     comps: null,
+    contestinfo: null
   },
   getters: {
     getComps: (state) => state.comps,

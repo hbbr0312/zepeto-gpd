@@ -22,7 +22,7 @@ const routes = [
     meta: { transitionName: "slide-left" },
   },
   {
-    path: "/submit/:id",
+    path: "/submit",
     name: "Submit",
     component: Submit,
     meta: { transitionName: "slide-left" },

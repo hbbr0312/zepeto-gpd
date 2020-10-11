@@ -52,7 +52,7 @@
           v-model="keyword"
           type="text"
           v-if="searchOn"
-          placeholder="여기를 수정해보세요"
+          placeholder="검색어를 입력하세요"
         />
         <v-btn icon><v-icon @click="searchclick">mdi-magnify</v-icon></v-btn>
       </div>

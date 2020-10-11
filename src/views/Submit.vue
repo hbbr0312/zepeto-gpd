@@ -240,7 +240,7 @@ export default {
   },
   mounted() {
     this.loading = true;
-    const contestinfo = this.$store.getters.getComps[this.$route.params.id];
+    const contestinfo = this.$store.state.contestinfo;
     this.contestinfo = contestinfo;
     if (contestinfo.theme[0] == "강얼대") {
       this.shotmode = 1;
