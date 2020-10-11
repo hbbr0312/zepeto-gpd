@@ -23,6 +23,7 @@
         </div>
         <div class="competition-versus-pictures">
           <v-img
+            contain
             class="competition-versus-placeholder"
             :src="competitors[voted].image"
             @click="onSelect('l')"
@@ -33,6 +34,7 @@
           />
 
           <v-img
+            contain
             class="competition-versus-placeholder"
             :src="competitors[voted + 1].image"
             @click="onSelect('r')"
@@ -111,6 +113,7 @@ export default {
     },
   },
   data: () => ({
+    sampleBooth: [559, 549, 548, 550, 552, 558, 559, 474, 480, 545],
     winRight: false,
     competitors: null,
     nextRounder: [],
@@ -178,7 +181,8 @@ export default {
     },
   },
   async mounted() {
-    const boothCode = `PHOTOBOOTH_ONE_${this.$store.state.compCode}`;
+    let boothCode;
+
     const zepetoBaseUrl =
       "https://render-api.zepeto.io/v2/graphics/zepeto/booth/";
 
@@ -186,6 +190,10 @@ export default {
     const competitors = [];
 
     for (const user of shuffledUsers) {
+      var randomIndex = Math.floor(Math.random() * 10);
+      boothCode = this.$store.state.compCode
+        ? `PHOTOBOOTH_ONE_${this.$store.state.compCode}`
+        : `PHOTOBOOTH_ONE_${this.sampleBooth[randomIndex]}`;
       const body = {
         type: "booth",
         width: 500,
