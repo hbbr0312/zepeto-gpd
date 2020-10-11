@@ -103,17 +103,30 @@
         </div>
       </div>
     </v-dialog>
-    <v-dialog
-      fullscreen
-      v-model="submitAvatar"
-      transition="dialog-bottom-transition"
-    >
-      <div class="avatar-dialog d-flex flex-column align-center">
-        <v-row>Change Avatar <v-btn icon>mdi-plus</v-btn></v-row>
-
+    <v-overlay :value="submitAvatar" class="d-flex flex-column justify-end">
+      <div class="contest_create_modal d-flex flex-column align-center">
+        <div
+          class="contest_create_modal_title d-flex flex-row justify-space-between align-center"
+          style="color: black; margin-top: 20px"
+        >
+          <div
+            class="d-flex flex-row flex-grow-1 text-center justify-center align-center"
+            style="margin-left: 50px"
+          >
+            Change Avatar
+          </div>
+          <v-btn
+            icon
+            color="black"
+            @click="submitAvatar = false"
+            style="margin-right: 20px"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
         <div
           class="submit-loading-full d-flex flex-column align-center justify-center"
-          v-if="poseLoading"
+          v-if="loading"
         >
           <v-progress-circular
             indeterminate
@@ -123,31 +136,21 @@
         </div>
         <v-row class="d-flex justify-center" v-else>
           <v-col
-            v-for="(a, i) in avatars"
-            :key="a"
+            v-for="(p, i) in avatars"
+            :key="p"
             class="d-flex child-flex"
             cols="5"
           >
             <v-img
-              :src="a"
-              :lazy-src="a"
+              :src="p"
+              :lazy-src="p"
               @click="selectAvatar(i)"
               :class="{ 'submit-selected': selectedAvatar == i }"
             >
-              <template v-slot:placeholder>
-                <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular
-                    indeterminate
-                    color="grey lighten-5"
-                  ></v-progress-circular>
-                </v-row>
-              </template>
             </v-img>
           </v-col>
-        </v-row>
-      </div>
-    </v-dialog>
-
+        </v-row></div
+    ></v-overlay>
     <v-overlay :value="submitPose" class="d-flex flex-column justify-end">
       <div class="contest_create_modal d-flex flex-column align-center">
         <div
@@ -201,20 +204,7 @@
 
 <script>
 import { get_image } from "@/assets/api";
-const avatars = [
-  "O8ALN9",
-  "MYKURU",
-  "I863RV",
-  "PEJS9P",
-  "HIB6YC",
-  "59391K",
-  "07FS6S",
-  "AVYFOM",
-  "LA0FSI",
-  "1ZGF5O",
-  "6Z17BF",
-  "O8ALN9",
-];
+const avatars = ["O8ALN9", "MYKURU", "I863RV", "PEJS9P"];
 const closeup = [
   "PHOTOBOOTH_ONE_543",
   "PHOTOBOOTH_ONE_482",
@@ -241,7 +231,7 @@ export default {
       selectedPose: 0,
       selectedAvatar: 0,
       shotmode: 0,
-      submitAvatar: false,
+      submitAvatar: true,
       submitPose: false,
       submitConfirm: false,
       submitLoading: false,
