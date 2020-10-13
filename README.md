@@ -1,5 +1,7 @@
 # zepeto-gpd
 
+http://zepeto-gpd.s3-website.ap-northeast-2.amazonaws.com
+
 ## Project setup
 ```
 yarn install
